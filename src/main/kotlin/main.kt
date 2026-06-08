@@ -15,16 +15,16 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.application
 import di.provideViewModelModule
-import online.jutter.di.provideDataModule
+import di.provideDataModule
 import di.provideDomainModule
 import org.koin.compose.KoinApplication
 import theme.Colors
-import theme.MonitorTheme
+import theme.AppTheme
 
 @Composable
 @Preview
 fun App() {
-    MonitorTheme {
+    AppTheme {
         Box(
             modifier = Modifier.fillMaxSize()
                 .background(color = Colors.background)

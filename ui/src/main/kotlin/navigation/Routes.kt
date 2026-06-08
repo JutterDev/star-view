@@ -12,3 +12,9 @@ object  ConnectDestination: NavigationDestination
 
 @Serializable
 object  ServerDestination: NavigationDestination
+
+@Serializable
+object  ConnectionSettings: NavigationDestination
+
+@Serializable
+object  Catalog: NavigationDestination

@@ -1,15 +1,42 @@
 package screens.server
 
-data object ServerState
+data class ServerState(
+    val ip: String = "ip",
+    val port: String = "port",
+    val pointName: String = "name",
+    val listState: ListState = ListState.Error("Stupid children detected: code 300"),
+)
 
-data object ServerAction
+sealed class ListState {
+
+    data object Loading: ListState()
+
+    data class Ready(
+        val int: Int,
+    ): ListState()
+
+    data class Error(
+        val errorText: String,
+    ): ListState()
+
+    data object Empty: ListState()
+}
+
+sealed class ServerAction {
+
+    object OpenConnectionSettings: ServerAction()
+
+    object OpenCatalog: ServerAction()
+
+    object ReloadList: ServerAction()
+}
 
 sealed class ServerEvent {
 
-    sealed class ServerNavigation: ServerEvent() {
+    sealed class Navigation: ServerEvent() {
 
-        data object NavigateToMain: ServerNavigation()
+        data object OpenConnectionSettings: Navigation()
 
-        data object NavigateToConnect: ServerNavigation()
+        data object OpenCatalog: Navigation()
     }
 }

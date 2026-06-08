@@ -13,6 +13,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import theme.Colors
@@ -25,6 +26,7 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     loaderVisible: Boolean = false,
     corners: Dp = 16.dp,
+    backgroundColor: Color = Colors.primary,
     onClick: () -> Unit,
 ) {
     Button(
@@ -34,10 +36,8 @@ fun PrimaryButton(
             .height(54.dp),
         shape = RoundedCornerShape(corners),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Colors.primary,
+            backgroundColor = backgroundColor,
             disabledBackgroundColor = Colors.backgroundSecondary,
-//            containerColor = Colors.primary,
-//            disabledContainerColor = Colors.backgroundSecondary
         )
     ) {
         Row(

@@ -12,7 +12,8 @@ class SplashViewModel(
 
     init {
         launchIO {
-            delay(3_000L)
+            delay(100)
+            //delay(3_000L)
             withIO {
                 if (isConnectionSettingsSavedUC()) {
                     _uiEvents.emit(

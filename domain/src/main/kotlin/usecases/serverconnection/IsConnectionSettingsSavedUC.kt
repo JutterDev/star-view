@@ -1,6 +1,6 @@
 package usecases.serverconnection
 
-import online.jutter.datacontracts.SettingsRepository
+import datacontracts.SettingsRepository
 
 interface IIsConnectionSettingsSavedUC {
 
@@ -11,6 +11,5 @@ class IsConnectionSettingsSavedUC(
     private val settingsRepository: SettingsRepository,
 ): IIsConnectionSettingsSavedUC {
 
-    override suspend fun invoke() =
-        (settingsRepository.ip?.isNotEmpty() ?: false) && (settingsRepository.port?.isNotEmpty() ?: false)
+    override suspend fun invoke() = settingsRepository.pointName?.isNotEmpty() ?: false
 }

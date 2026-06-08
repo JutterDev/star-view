@@ -101,6 +101,7 @@ fun ConnectScreenContent(
                         }
                     }
                 }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -115,17 +116,21 @@ fun ConnectScreenContent(
                         )
                         TextInputLine(
                             label = "IP Address",
-                            text = DEFAULT_IP,
                             keyboardType = KeyboardType.Text,
                         ) {
                             onAction(ConnectAction.IpChanged(it))
                         }
                         TextInputLine(
                             label = "Port",
-                            text = DEFAULT_PORT,
                             keyboardType = KeyboardType.Decimal,
                         ) {
                             onAction(ConnectAction.PortChanged(it))
+                        }
+                        TextInputLine(
+                            label = "Secret Key",
+                            keyboardType = KeyboardType.Text,
+                        ) {
+                            onAction(ConnectAction.KeyChanged(it))
                         }
                         AnimatedVisibility(state.connectError != null) {
                             Box(

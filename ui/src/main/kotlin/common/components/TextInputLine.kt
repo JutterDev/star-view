@@ -38,8 +38,9 @@ fun TextInputLine(
     keyboardType: KeyboardType = KeyboardType.Text,
     onDoneAction: (() -> Unit)? = null,
     clearAfterEnter: Boolean = false,
+    icon: String? = null,
+    modifier: Modifier = Modifier,
     onTextChange: (String) -> Unit
-
 ) {
 
     var value by remember { mutableStateOf(TextFieldValue(text ?: "")) }
@@ -53,6 +54,14 @@ fun TextInputLine(
                 style = MonitorText.Regular.Sp16.Gray.style(),
             )
         }} else null,
+        leadingIcon = if (icon != null) {
+            {
+                SvgIcon(
+                    svgName = icon,
+                    modifier = Modifier.size(24.dp),
+                )
+            }
+        } else null,
         label = if (!label.isNullOrEmpty()) {{
             Text(
                 text = label,
@@ -68,7 +77,7 @@ fun TextInputLine(
             value = newText
             onTextChange(newText.text)
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(Colors.backgroundSecondary, RoundedCornerShape(16.dp))
             .padding(6.dp)

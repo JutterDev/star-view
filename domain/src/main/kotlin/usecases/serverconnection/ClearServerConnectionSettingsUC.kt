@@ -1,6 +1,6 @@
 package usecases.serverconnection
 
-import online.jutter.datacontracts.SettingsRepository
+import datacontracts.SettingsRepository
 
 interface IClearServerConnectionSettingsUC {
 
@@ -14,5 +14,6 @@ class ClearServerConnectionSettingsUC(
     override suspend fun invoke() {
         settingsRepository.ip = null
         settingsRepository.port = null
+        settingsRepository.key = null
     }
 }

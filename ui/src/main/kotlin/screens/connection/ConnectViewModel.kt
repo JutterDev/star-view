@@ -9,14 +9,16 @@ class ConnectViewModel(
 
     override fun startState() = ConnectState()
 
-    private var ip: String = DEFAULT_IP
-    private var port: String = DEFAULT_PORT
+    private var ip: String = ""
+    private var port: String = ""
+    private var key: String = ""
 
     fun onAction(action: ConnectAction) {
         when(action) {
             ConnectAction.ConnectButtonClicked -> onLogin()
             is ConnectAction.IpChanged -> onIpChanged(action.ip)
             is ConnectAction.PortChanged -> onPortChanged(action.port)
+            is ConnectAction.KeyChanged -> onKeyChanged(action.key)
         }
     }
 
@@ -34,16 +36,24 @@ class ConnectViewModel(
         }
     }
 
+    private fun onKeyChanged(key: String) {
+        launchUI {
+            this.key = key
+            updateLoginButtonState()
+        }
+    }
+
     private suspend fun updateLoginButtonState() {
         _uiState.emit(
             uiState.value.copy(
-                buttonEnabled = ip.isNotBlank() && port.isNotBlank()
+                buttonEnabled = ip.isNotBlank() && port.isNotBlank() && key.isNotBlank()
             )
         )
     }
 
     fun onLogin() {
         launchUI({
+            it.printStackTrace()
             _uiState.emit(uiState.value.copy(
                 connectError = it.message,
                 progress = false,
@@ -53,7 +63,7 @@ class ConnectViewModel(
                 progress = true,
             ))
             withIO {
-                saveServerConnectionSettingsUC(ip, port)
+                saveServerConnectionSettingsUC(ip, port, key)
             }
             _uiState.emit(uiState.value.copy(
                 progress = false,
@@ -62,6 +72,3 @@ class ConnectViewModel(
         }
     }
 }
-
-const val DEFAULT_IP = "192.168.0.100"
-const val DEFAULT_PORT = "9999"

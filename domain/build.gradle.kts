@@ -22,3 +22,7 @@ tasks.test {
 kotlin {
     jvmToolchain(23)
 }
+java {
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
+}

@@ -12,6 +12,7 @@ object Colors {
 
     val background = Color(0xFF000000)
     val backgroundSecondary = Color(0xFF181818)
+    val border = Color(0xFF323232)
     val errorBackground = Color(0xFF311C1C)
 
     val white = Color(0xFFFFFFFF)
