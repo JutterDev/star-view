@@ -36,7 +36,7 @@ class Service(
     val baseUrl
         get() = "htpp://${settingsRepository.ip}:${settingsRepository.port}/api/1.0"
 
-    suspend inline fun <reified RES> get(url: String, query: HashMap<String, String>): RES {
+    suspend inline fun <reified RES> get(url: String, query: HashMap<String, String> = hashMapOf()): RES {
         val response = client.get("$baseUrl/$url") {
             contentType(ContentType.Application.Json)
             query.forEach {

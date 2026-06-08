@@ -6,6 +6,7 @@ import datasources.api.ApiService
 import datasources.api.models.testconnection.TestConnectionMapper
 import datacontracts.SettingsRepository
 import datasources.api.Service
+import datasources.api.models.telescope.TelescopeInfoMapper
 import datasources.catalog.CsvCatalogRepository
 import datasources.settings.FileSettingsRepository
 import org.koin.core.module.dsl.singleOf
@@ -20,6 +21,7 @@ val provideDataModule = module {
     singleOf(::Service)
 
     singleOf(::TestConnectionMapper)
+    singleOf(::TelescopeInfoMapper)
 
     singleOf(::CsvCatalogRepository).bind(CatalogRepository::class)
 }

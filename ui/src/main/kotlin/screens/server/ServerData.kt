@@ -1,5 +1,7 @@
 package screens.server
 
+import models.telescope.TelescopeInfo
+
 data class ServerState(
     val ip: String = "ip",
     val port: String = "port",
@@ -12,7 +14,7 @@ sealed class ListState {
     data object Loading: ListState()
 
     data class Ready(
-        val int: Int,
+        val list: List<TelescopeInfo>,
     ): ListState()
 
     data class Error(

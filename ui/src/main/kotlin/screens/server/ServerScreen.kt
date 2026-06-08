@@ -6,6 +6,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
@@ -25,10 +27,14 @@ import common.components.StarsAnimation
 import common.components.SvgIcon
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
+import models.catalog.CatalogObject
+import models.catalog.ObjectType
+import models.telescope.TelescopeInfo
 import online.jutter.navigation.Catalog
 import online.jutter.navigation.ConnectionSettings
 import org.koin.compose.viewmodel.koinViewModel
 import screens.connection.ConnectAction
+import screens.server.catalog.ObjectTypeIcon
 import theme.Colors
 import theme.MonitorText
 
@@ -198,7 +204,64 @@ fun ListReady(
     state: ListState.Ready,
     onAction: (ServerAction) -> Unit,
 ) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            Text(
+                text = "Device list",
+                style = MonitorText.Bold.Sp20.White.style(),
+            )
 
+            LazyColumn {
+                items(state.list) { item ->
+                    TelescopeItem(item) { }
+                    Spacer(Modifier.height(8.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TelescopeItem(obj: TelescopeInfo, onSelect: () -> Unit) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onSelect()
+            }
+    ) {
+        SvgIcon(
+            svgName = "label_icon",
+            modifier = Modifier.size(24.dp)
+        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = obj.name,
+                style = MonitorText.Regular.Sp20.White.style(),
+            )
+            Text(
+                text = "lat: ${obj.lat} / lon: ${obj.lon}",
+                style = MonitorText.Regular.Sp16.Gray.style(),
+            )
+        }
+        SvgIcon(
+            svgName = "arrow_icon",
+            modifier = Modifier.size(24.dp)
+                .align(Alignment.CenterVertically)
+        )
+    }
 }
 
 @Composable

@@ -15,6 +15,8 @@ import usecases.serverconnection.IIsConnectionSettingsSavedUC
 import usecases.serverconnection.ITestConnectionUC
 import usecases.serverconnection.IsConnectionSettingsSavedUC
 import usecases.serverconnection.TestConnectionUC
+import usecases.telescope.GetTelescopesListUC
+import usecases.telescope.IGetTelescopesListUC
 
 val provideDomainModule = module {
     singleOf(::SaveServerConnectionSettingsUC).bind(ISaveServerConnectionSettingsUC::class)
@@ -23,4 +25,5 @@ val provideDomainModule = module {
     singleOf(::TestConnectionUC).bind(ITestConnectionUC::class)
     singleOf(::GetServerInfoUC).bind(IGetServerInfoUC::class)
     singleOf(::GetFullCatalogUC).bind(IGetFullCatalogUC::class)
+    singleOf(::GetTelescopesListUC).bind(IGetTelescopesListUC::class)
 }
