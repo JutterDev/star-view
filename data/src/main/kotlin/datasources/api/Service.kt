@@ -4,6 +4,7 @@ import datacontracts.SettingsRepository
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.*
@@ -31,10 +32,16 @@ class Service(
                 encodeDefaults = true
             })
         }
+
+        install(HttpTimeout) {
+            requestTimeoutMillis = 15000  // Время на весь запрос (15 сек)
+            connectTimeoutMillis = 10000  // Время на подключение (10 сек)
+            socketTimeoutMillis = 10000   // Время на ожидание данных (10 сек)
+        }
     }
 
     val baseUrl
-        get() = "htpp://${settingsRepository.ip}:${settingsRepository.port}/api/1.0"
+        get() = "http://${settingsRepository.ip}:${settingsRepository.port}/api/1.0"
 
     suspend inline fun <reified RES> get(url: String, query: HashMap<String, String> = hashMapOf()): RES {
         val response = client.get("$baseUrl/$url") {

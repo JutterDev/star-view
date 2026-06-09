@@ -13,11 +13,21 @@ class SaveServerConnectionSettingsUC(
 ): ISaveServerConnectionSettingsUC {
 
     override suspend fun invoke(ip: String, port: String, key: String) {
+
+        val oldPort = settingsRepository.port
+        val oldIp = settingsRepository.ip
+
         settingsRepository.ip = ip
         settingsRepository.port = port
 
-        val connectionInfo = testConnectionUC.invoke(key)
-        settingsRepository.pointName = connectionInfo.pointName
+        try {
+            val connectionInfo = testConnectionUC.invoke(key)
+            settingsRepository.pointName = connectionInfo.pointName
+        } catch (ex: Exception) {
+            settingsRepository.ip = oldIp
+            settingsRepository.port = oldPort
+            throw ex
+        }
 
         settingsRepository.key = key
     }
