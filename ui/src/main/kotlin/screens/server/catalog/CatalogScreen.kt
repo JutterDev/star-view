@@ -95,7 +95,7 @@ fun CatalogScreenContent(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .aspectRatio(1.0f),
-                            onClick = {  }
+                            onClick = { onAction(CatalogAction.OpenFilter) }
                         ) {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
@@ -127,30 +127,43 @@ fun CatalogScreenContent(
                 MCard(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    if (state.selectedObject != null) {
-                        CatalogObjectDetail(state.selectedObject)
+                    if (!state.filterState.isVisible) {
+                        if (state.selectedObject != null) {
+                            CatalogObjectDetail(state.selectedObject)
+                        } else {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Column(
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    SvgIcon(
+                                        svgName = "galaxy_icon",
+                                        modifier = Modifier.size(100.dp),
+                                    )
+                                    Spacer(Modifier.height(16.dp))
+                                    Text(
+                                        text = "No selected",
+                                        style = MonitorText.Regular.Sp20.White.style(),
+                                    )
+                                    Text(
+                                        text = "Select object from NGC catalog",
+                                        style = MonitorText.Regular.Sp16.Gray.style(),
+                                    )
+                                }
+                            }
+                        }
                     } else {
                         Box(
                             modifier = Modifier.fillMaxSize(),
                             contentAlignment = Alignment.Center,
                         ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                SvgIcon(
-                                    svgName = "galaxy_icon",
-                                    modifier = Modifier.size(100.dp),
-                                )
-                                Spacer(Modifier.height(16.dp))
-                                Text(
-                                    text = "No selected",
-                                    style = MonitorText.Regular.Sp20.White.style(),
-                                )
-                                Text(
-                                    text = "Select object from NGC catalog",
-                                    style = MonitorText.Regular.Sp16.Gray.style(),
-                                )
-                            }
+                            FilterSection(
+                                state = state.filterState,
+                                onSelectType = { onAction(CatalogAction.ChangeFilter(it)) },
+                                onDone = { onAction(CatalogAction.OnDoneFilter) },
+                            )
                         }
                     }
                 }
@@ -506,5 +519,83 @@ private fun InfoLine(
             style = MonitorText.Regular.Sp18.White.style(),
             maxLines = 1,
         )
+    }
+}
+
+@Composable
+private fun FilterSection(
+    state: FilterState,
+    onSelectType: (ObjectType?) -> Unit,
+    onDone: () -> Unit,
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            text = "Filter options",
+            style = MonitorText.Bold.Sp24.White.style(),
+        )
+        Text(
+            text = "Object type",
+            style = MonitorText.Regular.Sp18.White.style(),
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            FilterItem(
+                itemType = ObjectType.UNKNOW,
+                isSelected = state.objectType == null,
+                name = "ALL",
+                onSelect = { onSelectType(null) }
+            )
+            for (item in ObjectType.entries) {
+                FilterItem(
+                    itemType = item,
+                    isSelected = state.objectType == item,
+                    name = item.name,
+                    onSelect = { onSelectType(item) }
+                )
+            }
+        }
+        PrimaryButton(
+            text = "Done",
+            modifier = Modifier.width(290.dp),
+        ) {
+            onDone()
+        }
+    }
+}
+
+@Composable
+private fun FilterItem(itemType: ObjectType, isSelected: Boolean, name: String, onSelect: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .border(
+                width = 2.dp,
+                color = if (isSelected) Colors.primary else Colors.border,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clip(RoundedCornerShape(24.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                onSelect()
+            }
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            ObjectTypeIcon(
+                type = itemType,
+                size = 84.dp,
+            )
+            Text(
+                text = name,
+                style = MonitorText.Regular.Sp16.Gray.style(),
+            )
+        }
     }
 }

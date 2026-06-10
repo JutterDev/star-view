@@ -25,8 +25,10 @@ sealed class CatalogAction {
     data object OpenFilter: CatalogAction()
 
     data class ChangeFilter(
-        val objectType: ObjectType,
+        val objectType: ObjectType?,
     ): CatalogAction()
+
+    data object OnDoneFilter: CatalogAction()
 }
 
 sealed class CatalogEvent {

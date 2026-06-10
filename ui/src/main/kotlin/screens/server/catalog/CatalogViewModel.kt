@@ -38,6 +38,7 @@ class CatalogViewModel(
             is CatalogAction.SelectCatalogObject -> onSelectCatalogObject(action.obj)
             is CatalogAction.OpenFilter -> onOpenFilter()
             is CatalogAction.ChangeFilter -> onChangeFilter(action.objectType)
+            is CatalogAction.OnDoneFilter -> onDoneFilter()
         }
     }
 
@@ -64,25 +65,53 @@ class CatalogViewModel(
     }
 
     private fun onOpenFilter() {
-
+        launchUI {
+            _uiState.emit(uiState.value.copy(
+                filterState = uiState.value.filterState.copy(
+                    isVisible = true,
+                ),
+            ))
+        }
     }
 
     private fun onChangeFilter(
-        objectType: ObjectType,
+        objectType: ObjectType?,
     ) {
+        launchUI {
+            _uiState.emit(uiState.value.copy(
+                filterState = uiState.value.filterState.copy(
+                    objectType = objectType,
+                ),
+            ))
+            withIO { updateList() }
+        }
+    }
 
+    private fun onDoneFilter() {
+        launchUI {
+            _uiState.emit(uiState.value.copy(
+                filterState = uiState.value.filterState.copy(
+                    isVisible = false,
+                ),
+            ))
+            withIO { updateList() }
+        }
     }
 
     private suspend fun updateList() {
+        val filteredList = catalog.filter {
+            if (_uiState.value.filterState.objectType == null) return@filter true
+            it.superType == _uiState.value.filterState.objectType
+        }
         if (searchText.isNotBlank()) {
             _uiState.emit(uiState.value.copy(
-                list = catalog.filter {
+                list = filteredList.filter {
                     it.name.contains(searchText) || it.commonNames?.toUpperCase(Locale.current)?.contains(searchText) ?: false
                 },
             ))
         } else {
             _uiState.emit(uiState.value.copy(
-                list = catalog,
+                list = filteredList,
             ))
         }
     }
